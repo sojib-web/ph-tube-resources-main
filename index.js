@@ -1,3 +1,10 @@
+function removeActiveCLass() {
+  const activeButtons = document.getElementsByClassName("active");
+  for (let btn of activeButtons) {
+    btn.classList.remove("active");
+  }
+}
+
 function loadCategory() {
   // fetch the data
   fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
@@ -9,14 +16,24 @@ function loadVideos() {
   // fetch the data
   fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
     .then((res) => res.json())
-    .then((data) => displayVideos(data.videos));
+    .then((data) => {
+      removeActiveCLass();
+      document.getElementById("btn-all")?.classList.add("active");
+      displayVideos(data.videos);
+    });
 }
 
 const loadCategoryVideos = (id) => {
   const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
   fetch(url)
     .then((res) => res.json())
-    .then((data) => displayVideos(data.category));
+    .then((data) => {
+      removeActiveCLass();
+      const clickedButton = document.getElementById(`btn-${id}`);
+      // @ts-ignore
+      clickedButton.classList.add("active");
+      displayVideos(data.category);
+    });
 };
 
 function displayCategories(categories) {
@@ -24,7 +41,7 @@ function displayCategories(categories) {
   for (let category of categories) {
     const categoryDiv = document.createElement("div");
     categoryDiv.innerHTML = `
-    <button  onclick="loadCategoryVideos(${category.category_id})" class="btn btn-sm hover:text-white hover:bg-[#FF1F3D] ">${category.category}</button>`;
+    <button id="btn-${category.category_id}" onclick="loadCategoryVideos(${category.category_id})" class="btn btn-sm hover:text-white hover:bg-[#FF1F3D] ">${category.category}</button>`;
     // @ts-ignore
     categoryContainer.append(categoryDiv);
   }
@@ -34,8 +51,21 @@ const displayVideos = (videos) => {
   const videoContainer = document.getElementById("video-container");
   // @ts-ignore
   videoContainer.innerHTML = "";
+  if (videos.length === 0) {
+    // @ts-ignore
+    videoContainer.innerHTML = `
+     <div
+        class="col-span-full flex flex-col justify-center items-center text-center py-20"
+      >
+        <img class="w-20" src="./images/Icon.png" alt="" />
+        <h2 class="text-2xl font-bold">
+          Oops!! Sorry, there is no content here
+        </h2>
+      </div>`;
+    return;
+  }
   videos.forEach((video) => {
-    console.log(video);
+    // console.log(video);
     const videoDiv = document.createElement("div");
     videoDiv.innerHTML = `  <div class="mt-5 card bg-base-100">
         <figure class="relative">
