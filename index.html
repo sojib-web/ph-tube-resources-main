@@ -28,10 +28,20 @@
       </nav>
       <nav id="category-container" class="flex justify-center gap-5 mt-6">
         <div>
-          <button class="btn btn-sm text-white bg-[#FF1F3D]">All</button>
+          <button
+            onclick="loadVideos()"
+            class="btn btn-sm text-white bg-[#FF1F3D]"
+          >
+            All
+          </button>
         </div>
       </nav>
     </header>
+
+    <section
+      class="w-11/12 mx-auto grid grid-cols-4 gap-5"
+      id="video-container"
+    ></section>
 
     <script src="./index.js"></script>
   </body>
